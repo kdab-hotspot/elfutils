@@ -36,7 +36,7 @@ VERSION = 1
 
 lib_LIBRARIES = libelf.a
 noinst_LIBRARIES = libelf_pic.a
-noinst_PROGRAMS = $(noinst_LIBRARIES:_pic.a=.so)
+noinst_PROGRAMS =
 include_HEADERS = libelf.h gelf.h nlist.h
 
 noinst_HEADERS = abstract.h common.h exttypes.h gelf_xlate.h libelfP.h \

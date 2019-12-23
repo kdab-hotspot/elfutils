@@ -36,7 +36,7 @@ VERSION = 1
 
 lib_LIBRARIES = libdw.a
 noinst_LIBRARIES = libdw_pic.a
-noinst_PROGRAMS = $(noinst_LIBRARIES:_pic.a=.so)
+noinst_PROGRAMS =
 
 include_HEADERS = dwarf.h
 pkginclude_HEADERS = libdw.h known-dwarf.h
