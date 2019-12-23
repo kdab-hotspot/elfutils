@@ -35,7 +35,7 @@ See the NOTES files for some design decisions and notes.
 ## Building on MacOSX
 
 ```
-brew install autoconf automake libtool gcc
+brew install autoconf automake libtool gcc argp-standalone gawk libarchive libmicrohttpd gettext
 export PATH="/usr/local/opt/m4/bin:$PATH"
 export PATH="/usr/local/opt/autoconf/bin:$PATH"
 export PATH="/usr/local/opt/libtool/bin:$PATH"
@@ -43,7 +43,7 @@ export PATH="/usr/local/opt/gcc/bin:$PATH"
 aclocal; autoheader; glibtoolize --copy; autoconf; automake --gnu --copy --add-missing
 mkdir build
 cd build
-CC=gcc-9 ../configure --prefix=$(pwd)/../install --disable-symbol-versioning
+CC=gcc-9 CFLAGS="-I/usr/local/include -I/usr/local/opt/gettext/include/" LDFLAGS="-L/usr/local/opt/argp-standalone/lib/" PKG_CONFIG_PATH=/usr/local/opt/libarchive/lib/pkgconfig ../configure --prefix=$(pwd)/../install --disable-symbol-versioning --enable-maintainer-mode
 make -j12
 ```
 

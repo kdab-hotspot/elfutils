@@ -132,9 +132,9 @@ valid arguments are:\n\
   - 'always', 'yes', 'force'\n\
   - 'never', 'no', 'none'\n\
   - 'auto', 'tty', 'if-tty'\n"),
-		     program_invocation_short_name, arg);
+		     GET_PROGAM_NAME(), arg);
 	      argp_help (&color_argp, stderr, ARGP_HELP_SEE,
-			 (char *) program_invocation_short_name);
+			 (char *) GET_PROGRAM_NAME());
 	      exit (EXIT_FAILURE);
 	    }
 	}

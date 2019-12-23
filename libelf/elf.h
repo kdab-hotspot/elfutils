@@ -19,7 +19,9 @@
 #ifndef _ELF_H
 #define	_ELF_H 1
 
+#ifndef __APPLE__
 #include <features.h>
+#endif
 
 __BEGIN_DECLS
 

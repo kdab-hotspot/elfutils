@@ -30,13 +30,40 @@
 #define LIB_SYSTEM_H	1
 
 #include <errno.h>
+#ifdef __APPLE__
+// https://github.com/nathangeffen/faststi/issues/3
+#include <mach/error.h>
+#define error(code, ...) unix_err(code)
+#else
 #include <error.h>
+#endif
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/param.h>
+#ifdef __APPLE__
+#include <machine/endian.h>
+#else
 #include <endian.h>
+#endif
+#ifdef __APPLE__
+// https://bugs.freedesktop.org/show_bug.cgi?id=8882
+#include <libkern/OSByteOrder.h>
+#define bswap_16 OSSwapInt16
+#define bswap_32 OSSwapInt32
+#define bswap_64 OSSwapInt64
+#else
 #include <byteswap.h>
+#endif
 #include <unistd.h>
+
+// https://github.com/cs50/libcs50/issues/14
+#undef GET_PROGRAM_NAME
+#ifdef __GLIBC__
+#define GET_PROGRAM_NAME() program_invocation_short_name
+#else /* *BSD and OS X */
+#include <stdlib.h>
+#define GET_PROGRAM_NAME() getprogname()
+#endif
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 # define LE32(n)	(n)
@@ -151,5 +178,18 @@ extern char *__cxa_demangle (const char *mangled_name, char *output_buffer,
 #define eu_static_assert(expr)						\
   extern int never_defined_just_used_for_checking[(expr) ? 1 : -1]	\
     __attribute__ ((unused))
+
+#ifdef __APPLE__
+/* Copied from glib */
+char *
+strchrnul (const char *s, int c)
+{
+        char *p = (char *) s;
+        while (*p && (*p != c))
+                ++p;
+
+        return p;
+}
+#endif
 
 #endif /* system.h */
