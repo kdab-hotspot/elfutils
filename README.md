@@ -43,7 +43,7 @@ export PATH="/usr/local/opt/gcc/bin:$PATH"
 aclocal; autoheader; glibtoolize --copy; autoconf; automake --gnu --copy --add-missing
 mkdir build
 cd build
-CC=gcc-9 ../configure --prefix=$(pwd)/../install
+CC=gcc-9 ../configure --prefix=$(pwd)/../install --disable-symbol-versioning
 make -j12
 ```
 
