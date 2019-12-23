@@ -39,7 +39,7 @@
 
 
 /* This is the key for the thread specific memory.  */
-static __thread int global_error;
+static _Thread_local int global_error;
 
 
 int

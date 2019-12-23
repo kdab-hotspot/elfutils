@@ -96,8 +96,8 @@ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AC_CHECK_TOOL([READELF], [readelf])
 AC_CHECK_TOOL([NM], [nm])
 
-# We use -std=gnu99 but have explicit checks for some language constructs
-# and GNU extensions since some compilers claim GNU99 support, but don't
+# We use -std=gnu11 but have explicit checks for some language constructs
+# and GNU extensions since some compilers claim GNU11 support, but don't
 # really support all language extensions. In particular we need
 # Mixed Declarations and Code
 # https://gcc.gnu.org/onlinedocs/gcc/Mixed-Declarations.html
@@ -105,9 +105,9 @@ AC_CHECK_TOOL([NM], [nm])
 # https://gcc.gnu.org/onlinedocs/gcc/Nested-Functions.html
 # Arrays of Variable Length
 # https://gcc.gnu.org/onlinedocs/gcc/Variable-Length.html
-AC_CACHE_CHECK([for gcc with GNU99 support], ac_cv_c99, [dnl
+AC_CACHE_CHECK([for gcc with GNU11 support], ac_cv_c11, [dnl
 old_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -std=gnu99"
+CFLAGS="$CFLAGS -std=gnu11"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([dnl
 int foo (int a)
 {
@@ -124,10 +124,10 @@ void baz (int n)
 {
   struct S { int x[[n]]; };
 }])],
-		  ac_cv_c99=yes, ac_cv_c99=no)
+		  ac_cv_c11=yes, ac_cv_c11=no)
 CFLAGS="$old_CFLAGS"])
-AS_IF([test "x$ac_cv_c99" != xyes],
-      AC_MSG_ERROR([gcc with GNU99 support required]))
+AS_IF([test "x$ac_cv_c11" != xyes],
+      AC_MSG_ERROR([gcc with GNU11 support required]))
 
 AC_CACHE_CHECK([whether gcc supports __attribute__((visibility()))],
 	ac_cv_visibility, [dnl
@@ -219,7 +219,7 @@ fi
 
 AC_SUBST([dso_LDFLAGS])
 
-AC_CACHE_CHECK([for __thread support], ac_cv_tls, [dnl
+AC_CACHE_CHECK([for _Thread_local support], ac_cv_tls, [dnl
 # Use the same flags that we use for our DSOs, so the test is representative.
 # Some old compiler/linker/libc combinations fail some ways and not others.
 save_CFLAGS="$CFLAGS"
@@ -228,14 +228,14 @@ CFLAGS="$fpic_CFLAGS $CFLAGS"
 LDFLAGS="$dso_LDFLAGS $LDFLAGS"
 AC_LINK_IFELSE([dnl
 AC_LANG_PROGRAM([[#include <stdlib.h>
-#undef __thread
-static __thread int a; int foo (int b) { return a + b; }]],
+#undef _Thread_local
+static _Thread_local int a; int foo (int b) { return a + b; }]],
 		[[exit (foo (0));]])],
 	       ac_cv_tls=yes, ac_cv_tls=no)
 CFLAGS="$save_CFLAGS"
 LDFLAGS="$save_LDFLAGS"])
 AS_IF([test "x$ac_cv_tls" != xyes],
-      AC_MSG_ERROR([__thread support required]))
+      AC_MSG_ERROR([_Thread_local support required]))
 
 dnl Before 4.9 gcc doesn't ship stdatomic.h, but the nessesary atomics are
 dnl available by (at least) 4.7. So if the system doesn't have a stdatomic.h we
