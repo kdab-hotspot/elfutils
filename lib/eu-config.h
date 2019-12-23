@@ -157,7 +157,7 @@ asm (".section predict_data, \"aw\"; .previous\n"
 #endif
 
 /* Avoid PLT entries.  */
-#ifdef PIC
+#if defined(PIC) && !defined(__APPLE__)
 # define INTUSE(name) _INTUSE(name)
 # define _INTUSE(name) __##name##_internal
 # define INTDEF(name) _INTDEF(name)

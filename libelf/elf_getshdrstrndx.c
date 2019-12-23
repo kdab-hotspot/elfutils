@@ -230,6 +230,10 @@ elf_getshdrstrndx (Elf *elf, size_t *dst)
 
   return result;
 }
+
+#ifndef __APPLE__
 INTDEF(elf_getshdrstrndx)
 /* Alias for the deprecated name.  */
 strong_alias (elf_getshdrstrndx, elf_getshstrndx)
+#endif
+

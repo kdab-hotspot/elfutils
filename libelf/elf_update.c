@@ -80,6 +80,7 @@ write_file (Elf *elf, int64_t size, int change_bo, size_t shnum)
 
   if (elf->map_address != NULL)
     {
+#ifndef __APPLE__
       /* When using mmap we want to make sure the file content is
 	 really there. Only using ftruncate might mean the file is
 	 extended, but space isn't allocated yet.  This might cause a
@@ -116,6 +117,7 @@ write_file (Elf *elf, int64_t size, int change_bo, size_t shnum)
 	    }
 
 	}
+#endif // !__APPLE__
 
       /* The file is mmaped.  */
       if ((class == ELFCLASS32

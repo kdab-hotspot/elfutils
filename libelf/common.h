@@ -31,8 +31,22 @@
 #define _COMMON_H       1
 
 #include <ar.h>
+#ifdef __APPLE__
+// https://bugs.freedesktop.org/show_bug.cgi?id=8882
+#include <libkern/OSByteOrder.h>
+#define bswap_16 OSSwapInt16
+#define bswap_32 OSSwapInt32
+#define bswap_64 OSSwapInt64
+#define htobe64(x) OSSwapHostToBigInt64(x)
+#define be64toh(x) OSSwapBigToHostInt64(x)
+#else
 #include <byteswap.h>
+#endif
+#ifdef __APPLE__
+#include <machine/endian.h>
+#else
 #include <endian.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 

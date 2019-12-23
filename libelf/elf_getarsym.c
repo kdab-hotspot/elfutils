@@ -32,8 +32,23 @@
 #endif
 
 #include <assert.h>
+#ifdef __APPLE__
+// https://bugs.freedesktop.org/show_bug.cgi?id=8882
+#include <libkern/OSByteOrder.h>
+#define bswap_16 OSSwapInt16
+#define bswap_32 OSSwapInt32
+#define bswap_64 OSSwapInt64
+#else
 #include <byteswap.h>
+#endif
+#ifdef __APPLE__
+#include <machine/endian.h>
+#define __BYTE_ORDER BYTE_ORDER
+#define __LITTLE_ENDIAN LITTLE_ENDIAN
+#define __BIG_ENDIAN BIG_ENDIAN
+#else
 #include <endian.h>
+#endif
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>

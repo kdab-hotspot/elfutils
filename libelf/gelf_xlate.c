@@ -31,7 +31,15 @@
 # include <config.h>
 #endif
 
+#ifdef __APPLE__
+// https://bugs.freedesktop.org/show_bug.cgi?id=8882
+#include <libkern/OSByteOrder.h>
+#define bswap_16 OSSwapInt16
+#define bswap_32 OSSwapInt32
+#define bswap_64 OSSwapInt64
+#else
 #include <byteswap.h>
+#endif
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
