@@ -41,17 +41,10 @@ VERSION = 1
 program_prefix=
 program_transform_name = s,x,x,
 
-if BUILD_STATIC
 libasm = ../libasm/libasm.a
 libdw = ../libdw/libdw.a -lz $(zip_LIBS) $(libelf) $(libebl) -ldl -lpthread
 libelf = ../libelf/libelf.a -lz
 libdebuginfod = ./libdebuginfod.a $(libcurl_LIBS)
-else
-libasm = ../libasm/libasm.so
-libdw = ../libdw/libdw.so
-libelf = ../libelf/libelf.so
-libdebuginfod = ./libdebuginfod.so
-endif
 libebl = ../libebl/libebl.a
 libeu = ../lib/libeu.a
 
@@ -73,32 +66,17 @@ am_libdebuginfod_pic_a_OBJECTS = $(libdebuginfod_a_SOURCES:.c=.os)
 
 pkginclude_HEADERS = debuginfod.h
 
-libdebuginfod_so_LIBS = libdebuginfod_pic.a
-libdebuginfod_so_LDLIBS = $(libcurl_LIBS)
-libdebuginfod.so$(EXEEXT): $(srcdir)/libdebuginfod.map $(libdebuginfod_so_LIBS)
-	$(AM_V_CCLD)$(LINK) $(dso_LDFLAGS) -o $@ \
-		-Wl,--soname,$@.$(VERSION) \
-		-Wl,--version-script,$<,--no-undefined \
-		-Wl,--whole-archive $(libdebuginfod_so_LIBS) -Wl,--no-whole-archive \
-		$(libdebuginfod_so_LDLIBS)
-	@$(textrel_check)
-	$(AM_V_at)ln -fs $@ $@.$(VERSION)
-
-install: install-am libdebuginfod.so
+install: install-am libdebuginfod_pic.a
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) libdebuginfod.so $(DESTDIR)$(libdir)/libdebuginfod-$(PACKAGE_VERSION).so
-	ln -fs libdebuginfod-$(PACKAGE_VERSION).so $(DESTDIR)$(libdir)/libdebuginfod.so.$(VERSION)
-	ln -fs libdebuginfod.so.$(VERSION) $(DESTDIR)$(libdir)/libdebuginfod.so
+	$(INSTALL_PROGRAM) libdebuginfod_pic.a $(DESTDIR)$(libdir)/libdebuginfod-$(PACKAGE_VERSION).a
 
 uninstall: uninstall-am
-	rm -f $(DESTDIR)$(libdir)/libdebuginfod-$(PACKAGE_VERSION).so
-	rm -f $(DESTDIR)$(libdir)/libdebuginfod.so.$(VERSION)
-	rm -f $(DESTDIR)$(libdir)/libdebuginfod.so
+	rm -f $(DESTDIR)$(libdir)/libdebuginfod-$(PACKAGE_VERSION).a
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)$(includedir)/elfutils
 
 EXTRA_DIST = libdebuginfod.map
-MOSTLYCLEANFILES = $(am_libdebuginfod_pic_a_OBJECTS) libdebuginfod.so.$(VERSION)
-CLEANFILES += $(am_libdebuginfod_pic_a_OBJECTS) libdebuginfod.so
+MOSTLYCLEANFILES = $(am_libdebuginfod_pic_a_OBJECTS)
+CLEANFILES += $(am_libdebuginfod_pic_a_OBJECTS)
 
 # automake std-options override: arrange to pass LD_LIBRARY_PATH
 installcheck-binPROGRAMS: $(bin_PROGRAMS)

@@ -39,15 +39,9 @@ bin_SCRIPTS = make-debug-archive
 EXTRA_DIST += make-debug-archive.in
 CLEANFILES += make-debug-archive
 
-if BUILD_STATIC
 libasm = ../libasm/libasm.a
 libdw = ../libdw/libdw.a -lz $(zip_LIBS) $(libelf) -ldl -lpthread
 libelf = ../libelf/libelf.a -lz
-else
-libasm = ../libasm/libasm.so
-libdw = ../libdw/libdw.so
-libelf = ../libelf/libelf.so
-endif
 libebl = ../libebl/libebl.a ../backends/libebl_backends.a ../libcpu/libcpu.a
 libeu = ../lib/libeu.a
 

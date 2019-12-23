@@ -46,8 +46,8 @@ libdwelf_a_SOURCES = dwelf_elf_gnu_debuglink.c dwelf_dwarf_gnu_debugaltlink.c \
 
 libdwelf = $(libdw)
 
-libdw = ../libdw/libdw.so
-libelf = ../libelf/libelf.so
+libdw = ../libdw/libdw.a
+libelf = ../libelf/libelf.a
 libebl = ../libebl/libebl.a
 libeu = ../lib/libeu.a
 

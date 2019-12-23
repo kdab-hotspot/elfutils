@@ -35,7 +35,7 @@ VERSION = 1
 
 lib_LIBRARIES = libasm.a
 noinst_LIBRARIES = libasm_pic.a
-noinst_PROGRAMS = $(noinst_LIBRARIES:_pic.a=.so)
+noinst_PROGRAMS =
 pkginclude_HEADERS = libasm.h
 
 libasm_a_SOURCES = asm_begin.c asm_abort.c asm_end.c asm_error.c \
@@ -55,36 +55,15 @@ libasm_a_SOURCES = asm_begin.c asm_abort.c asm_end.c asm_error.c \
 libasm_pic_a_SOURCES =
 am_libasm_pic_a_OBJECTS = $(libasm_a_SOURCES:.c=.os)
 
-libasm_so_DEPS = ../lib/libeu.a ../libebl/libebl_pic.a ../libelf/libelf.so ../libdw/libdw.so
-libasm_so_LDLIBS = $(libasm_so_DEPS)
-if USE_LOCKS
-libasm_so_LDLIBS += -lpthread
-endif
-
-libasm_so_LIBS = libasm_pic.a
-libasm_so_SOURCES =
-libasm.so$(EXEEXT): $(srcdir)/libasm.map $(libasm_so_LIBS) $(libasm_so_DEPS)
-	$(AM_V_CCLD)$(LINK) $(dso_LDFLAGS) -o $@ \
-		-Wl,--soname,$@.$(VERSION) \
-		-Wl,--version-script,$<,--no-undefined \
-		-Wl,--whole-archive $(libasm_so_LIBS) -Wl,--no-whole-archive \
-		$(libasm_so_LDLIBS)
-	@$(textrel_check)
-	$(AM_V_at)ln -fs $@ $@.$(VERSION)
-
-install: install-am libasm.so
+install: install-am libasm_pic.a
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) libasm.so $(DESTDIR)$(libdir)/libasm-$(PACKAGE_VERSION).so
-	ln -fs libasm-$(PACKAGE_VERSION).so $(DESTDIR)$(libdir)/libasm.so.$(VERSION)
-	ln -fs libasm.so.$(VERSION) $(DESTDIR)$(libdir)/libasm.so
+	$(INSTALL_PROGRAM) libasm_pic.a $(DESTDIR)$(libdir)/libasm-$(PACKAGE_VERSION).a
 
 uninstall: uninstall-am
-	rm -f $(DESTDIR)$(libdir)/libasm-$(PACKAGE_VERSION).so
-	rm -f $(DESTDIR)$(libdir)/libasm.so.$(VERSION)
-	rm -f $(DESTDIR)$(libdir)/libasm.so
+	rm -f $(DESTDIR)$(libdir)/libasm-$(PACKAGE_VERSION).a
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)$(includedir)/elfutils
 
 noinst_HEADERS = libasmP.h symbolhash.h
 EXTRA_DIST = libasm.map
 
-CLEANFILES += $(am_libasm_pic_a_OBJECTS) libasm.so.$(VERSION)
+CLEANFILES += $(am_libasm_pic_a_OBJECTS)

@@ -80,9 +80,9 @@ libdwfl_a_SOURCES += lzma.c
 endif
 
 libdwfl = $(libdw)
-libdw = ../libdw/libdw.so
-libelf = ../libelf/libelf.so
-libebl = ../libebl/libebl.a
+libdw = ../libdw/libdw_pic.a
+libelf = ../libelf/libelf_pic.a
+libebl = ../libebl/libebl_pic.a
 libeu = ../lib/libeu.a
 
 libdwfl_pic_a_SOURCES =

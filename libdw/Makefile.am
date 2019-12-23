@@ -105,31 +105,12 @@ endif
 libdw_pic_a_SOURCES =
 am_libdw_pic_a_OBJECTS = $(libdw_a_SOURCES:.c=.os)
 
-libdw_so_LIBS = ../libebl/libebl_pic.a ../backends/libebl_backends_pic.a \
-		../libcpu/libcpu_pic.a libdw_pic.a ../libdwelf/libdwelf_pic.a \
-		../libdwfl/libdwfl_pic.a
-libdw_so_DEPS = ../lib/libeu.a ../libelf/libelf.so
-libdw_so_LDLIBS = $(libdw_so_DEPS) -ldl -lz $(argp_LDADD) $(zip_LIBS) -pthread
-libdw_so_SOURCES =
-libdw.so$(EXEEXT): $(srcdir)/libdw.map $(libdw_so_LIBS) $(libdw_so_DEPS)
-	$(AM_V_CCLD)$(LINK) $(dso_LDFLAGS) -o $@ \
-		-Wl,--soname,$@.$(VERSION),--enable-new-dtags \
-		-Wl,--version-script,$<,--no-undefined \
-		-Wl,--whole-archive $(libdw_so_LIBS) -Wl,--no-whole-archive \
-		$(libdw_so_LDLIBS)
-	@$(textrel_check)
-	$(AM_V_at)ln -fs $@ $@.$(VERSION)
-
-install: install-am libdw.so
+install: install-am libdw_pic.a
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) libdw.so $(DESTDIR)$(libdir)/libdw-$(PACKAGE_VERSION).so
-	ln -fs libdw-$(PACKAGE_VERSION).so $(DESTDIR)$(libdir)/libdw.so.$(VERSION)
-	ln -fs libdw.so.$(VERSION) $(DESTDIR)$(libdir)/libdw.so
+	$(INSTALL_PROGRAM) libdw_pic.a $(DESTDIR)$(libdir)/libdw-$(PACKAGE_VERSION).a
 
 uninstall: uninstall-am
-	rm -f $(DESTDIR)$(libdir)/libdw-$(PACKAGE_VERSION).so
-	rm -f $(DESTDIR)$(libdir)/libdw.so.$(VERSION)
-	rm -f $(DESTDIR)$(libdir)/libdw.so
+	rm -f $(DESTDIR)$(libdir)/libdw-$(PACKAGE_VERSION).a
 	rmdir --ignore-fail-on-non-empty $(DESTDIR)$(includedir)/elfutils
 
 libdwfl_objects = $(shell $(AR) t ../libdwfl/libdwfl.a)
@@ -152,4 +133,4 @@ noinst_HEADERS = libdwP.h memory-access.h dwarf_abbrev_hash.h \
 
 EXTRA_DIST = libdw.map
 
-MOSTLYCLEANFILES = $(am_libdw_pic_a_OBJECTS) libdw.so.$(VERSION)
+MOSTLYCLEANFILES = $(am_libdw_pic_a_OBJECTS)

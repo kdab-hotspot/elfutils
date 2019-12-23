@@ -105,34 +105,13 @@ libelf_a_SOURCES = elf_version.c elf_hash.c elf_error.c elf_fill.c \
 libelf_pic_a_SOURCES =
 am_libelf_pic_a_OBJECTS = $(libelf_a_SOURCES:.c=.os)
 
-libelf_so_DEPS = ../lib/libeu.a
-libelf_so_LDLIBS = $(libelf_so_DEPS) -lz
-if USE_LOCKS
-libelf_so_LDLIBS += -lpthread
-endif
-
-libelf_so_LIBS = libelf_pic.a
-libelf_so_SOURCES =
-libelf.so$(EXEEXT): $(srcdir)/libelf.map $(libelf_so_LIBS) $(libelf_so_DEPS)
-	$(AM_V_CCLD)$(LINK) $(dso_LDFLAGS) -o $@ \
-		-Wl,--soname,$@.$(VERSION) \
-		-Wl,--version-script,$<,--no-undefined \
-		-Wl,--whole-archive $(libelf_so_LIBS) -Wl,--no-whole-archive \
-		$(libelf_so_LDLIBS)
-	@$(textrel_check)
-	$(AM_V_at)ln -fs $@ $@.$(VERSION)
-
-install: install-am libelf.so
+install: install-am libelf_pic.a
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_PROGRAM) libelf.so $(DESTDIR)$(libdir)/libelf-$(PACKAGE_VERSION).so
-	ln -fs libelf-$(PACKAGE_VERSION).so $(DESTDIR)$(libdir)/libelf.so.$(VERSION)
-	ln -fs libelf.so.$(VERSION) $(DESTDIR)$(libdir)/libelf.so
+	$(INSTALL_PROGRAM) libelf_pic.a $(DESTDIR)$(libdir)/libelf-$(PACKAGE_VERSION).a
 
 uninstall: uninstall-am
-	rm -f $(DESTDIR)$(libdir)/libelf-$(PACKAGE_VERSION).so
-	rm -f $(DESTDIR)$(libdir)/libelf.so.$(VERSION)
-	rm -f $(DESTDIR)$(libdir)/libelf.so
+	rm -f $(DESTDIR)$(libdir)/libelf-$(PACKAGE_VERSION).a
 
 EXTRA_DIST = libelf.map
 
-CLEANFILES += $(am_libelf_pic_a_OBJECTS) libelf.so.$(VERSION)
+CLEANFILES += $(am_libelf_pic_a_OBJECTS)
