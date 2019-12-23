@@ -1,3 +1,5 @@
+# ElfUtils
+
 The elfutils project provides libraries and tools for ELF files and DWARF data.
 
 The project home is http://elfutils.org/
@@ -29,3 +31,19 @@ Or use the form at https://sourceware.org/lists.html#ml-requestor
 See the CONTRIBUTING file for how to propose patches to the code.
 
 See the NOTES files for some design decisions and notes.
+
+## Building on MacOSX
+
+```
+brew install autoconf automake libtool gcc
+export PATH="/usr/local/opt/m4/bin:$PATH"
+export PATH="/usr/local/opt/autoconf/bin:$PATH"
+export PATH="/usr/local/opt/libtool/bin:$PATH"
+export PATH="/usr/local/opt/gcc/bin:$PATH"
+aclocal; autoheader; glibtoolize --copy; autoconf; automake --gnu --copy --add-missing
+mkdir build
+cd build
+CC=gcc-9 ../configure --prefix=$(pwd)/../install
+make -j12
+```
+
